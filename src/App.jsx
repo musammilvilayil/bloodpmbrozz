@@ -24,11 +24,12 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [removalDonor, setRemovalDonor] = useState(null);
 
-  // Fetch approved public donors from API
-  const fetchDonors = useCallback(async () => {
-    setLoading(true);
+  // Fetch approved public donors from API with optional cache bypass
+  const fetchDonors = useCallback(async (force = false) => {
+    if (force) setLoading(true);
     try {
-      const res = await fetch('/api/donors');
+      const url = force ? `/api/donors?refresh=true&t=${Date.now()}` : '/api/donors';
+      const res = await fetch(url);
       const data = await res.json();
       if (data.success) {
         setDonors(data.donors || []);
@@ -44,8 +45,25 @@ export default function App() {
     }
   }, []);
 
+  // Initial load, periodic background synchronization (every 60s), and on window focus
   useEffect(() => {
-    fetchDonors();
+    fetchDonors(false);
+
+    // Auto-sync polling every 60 seconds
+    const interval = setInterval(() => {
+      fetchDonors(false);
+    }, 60000);
+
+    // Refresh when user returns to tab
+    const handleFocus = () => {
+      fetchDonors(false);
+    };
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [fetchDonors]);
 
   const handleScrollToSearch = () => {
@@ -76,7 +94,7 @@ export default function App() {
         <DonorDirectory 
           donors={donors}
           loading={loading}
-          onRefresh={fetchDonors}
+          onRefresh={() => fetchDonors(true)}
           onOpenRemoval={(donor) => setRemovalDonor(donor)}
           onOpenRegister={() => setIsRegisterOpen(true)}
         />

@@ -14,9 +14,9 @@ const CACHE_TTL_MS = 60 * 1000; // 60 seconds
 // (In production, can also be synced directly with Google Apps Script)
 export const adminOverrides = new Map();
 
-export async function fetchLiveDonors() {
+export async function fetchLiveDonors(forceRefresh = false) {
   const now = Date.now();
-  if (cachedDonors && (now - lastCacheTime < CACHE_TTL_MS)) {
+  if (!forceRefresh && cachedDonors && (now - lastCacheTime < CACHE_TTL_MS)) {
     return cachedDonors;
   }
 
@@ -105,7 +105,9 @@ export function sanitizePublicDonors(donors) {
 
 export default async function handler(req, res) {
   try {
-    const rawDonors = await fetchLiveDonors();
+    const url = (req && req.url) || '';
+    const forceRefresh = url.includes('refresh=true') || Boolean(req?.headers?.['x-refresh']);
+    const rawDonors = await fetchLiveDonors(forceRefresh);
     const donorsWithOverrides = applyOverrides(rawDonors);
     const publicDonors = sanitizePublicDonors(donorsWithOverrides);
 
