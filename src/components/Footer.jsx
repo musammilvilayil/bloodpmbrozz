@@ -1,4 +1,5 @@
 import React from 'react';
+import zenithLogo from '../assets/image.png';
 import { 
   Heart, 
   Phone, 
@@ -61,7 +62,7 @@ export default function Footer({ onOpenAdmin, onOpenRegister }) {
 
         <div className="mt-5 rounded-2xl border border-slate-700/70 bg-slate-800/70 px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-600 to-blue-950 flex items-center justify-center font-black text-white text-xl shadow-lg shadow-blue-500/20" aria-hidden="true">Z</div>
+            <img src={zenithLogo} alt="Zenith Softworks logo" className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-contain bg-slate-950 p-1 shrink-0" loading="lazy" />
             <div>
               <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400 font-semibold">Designed & Developed by</p>
               <a href="https://zenithsoftworks.in" target="_blank" rel="noopener noreferrer" className="font-extrabold text-white hover:text-cyan-300 transition-colors">ZENITH <span className="text-cyan-400">SOFTWORKS</span></a>
