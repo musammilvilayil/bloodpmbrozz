@@ -27,25 +27,25 @@ export default function LiveToast({ toast, onDismiss }) {
     <div className="fixed bottom-6 right-6 z-50 max-w-sm w-full animate-in slide-in-from-bottom-5 fade-in duration-300">
       <div className={`relative overflow-hidden rounded-2xl p-4 shadow-2xl border backdrop-blur-md ${
         isNewDonor 
-          ? 'bg-slate-900/95 text-white border-red-500/40 ring-1 ring-red-500/30' 
+          ? 'bg-slate-900/95 text-white border-emerald-500/40 ring-1 ring-emerald-500/30' 
           : 'bg-white/95 text-slate-900 border-slate-200 ring-1 ring-emerald-500/20'
       }`}>
         
         {/* Subtle accent bar */}
         <div className={`absolute top-0 left-0 right-0 h-1 ${
           isNewDonor 
-            ? 'bg-gradient-to-r from-red-500 to-rose-500 animate-pulse' 
+            ? 'bg-gradient-to-r from-emerald-500 to-teal-500 animate-pulse' 
             : 'bg-emerald-500'
         }`} />
 
         <div className="flex items-start gap-3 mt-1">
           <div className={`flex items-center justify-center w-10 h-10 rounded-xl shrink-0 ${
             isNewDonor 
-              ? 'bg-red-600/30 text-red-400' 
+              ? 'bg-emerald-600/30 text-emerald-400' 
               : 'bg-emerald-100 text-emerald-700'
           }`}>
             {isNewDonor ? (
-              <Heart className="w-5 h-5 fill-red-500 text-red-500 animate-pulse" />
+              <Heart className="w-5 h-5 fill-emerald-500 text-emerald-500 animate-pulse" />
             ) : (
               <RefreshCw className="w-5 h-5 text-emerald-600 animate-spin" />
             )}
@@ -54,7 +54,7 @@ export default function LiveToast({ toast, onDismiss }) {
           <div className="flex-1 pr-2">
             <div className="flex items-center gap-1.5">
               <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                isNewDonor ? 'bg-red-500/20 text-red-300' : 'bg-emerald-100 text-emerald-800'
+                isNewDonor ? 'bg-emerald-500/20 text-emerald-300' : 'bg-emerald-100 text-emerald-800'
               }`}>
                 {toast.badge || "Live Update"}
               </span>

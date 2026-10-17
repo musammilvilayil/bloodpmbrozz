@@ -15,16 +15,14 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
   if (!isOpen || !donor) return null;
 
   const handleSendRequest = () => {
-    // Generate pre-filled WhatsApp support message
     let actionText = "temporarily mark my availability as Resting / Unavailable";
     if (requestType === 'update') actionText = "update my contact details";
     if (requestType === 'delete') actionText = "permanently delete my donor listing";
 
     const msg = encodeURIComponent(
-      `Hello Blood PM Brozz Admin, I am registered as a donor (ID: ${donor.id}, Name: ${donor.name}, Blood Group: ${donor.bloodGroup}). I would like to request to ${actionText}. Thank you.`
+      `Hello Pallimukk Brothers Admin, I am registered as a donor (ID: ${donor.id}, Name: ${donor.name}, Blood Group: ${donor.bloodGroup}). I would like to request to ${actionText}. Thank you.`
     );
     
-    // Fallback WhatsApp coordinator or submit notification
     const waUrl = `https://wa.me/916282135504?text=${msg}`;
     window.open(waUrl, '_blank');
     setSubmitted(true);
@@ -39,21 +37,21 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
         <div className="flex items-center justify-between px-6 py-5 bg-slate-900 text-white">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-slate-800">
-              <ShieldAlert className="w-5 h-5 text-red-400" />
+              <ShieldAlert className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
               <h3 className="text-lg font-bold font-['Outfit']">
                 Update or Remove Listing
               </h3>
               <p className="text-xs text-slate-400">
-                Donor Privacy & Availability Management
+                Pallimukk Brothers Blood Index
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -68,7 +66,7 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
               <span className="font-bold text-slate-900">{donor.name}</span>
               <span className="text-slate-500 ml-2">({donor.district})</span>
             </div>
-            <span className="px-2 py-0.5 rounded font-black bg-red-100 text-red-700">
+            <span className="px-2.5 py-0.5 rounded-lg font-black bg-emerald-100 text-emerald-800">
               {donor.bloodGroup}
             </span>
           </div>
@@ -78,11 +76,11 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
               <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
               <h4 className="font-bold text-slate-900 text-base">Request Submitted</h4>
               <p className="text-xs text-slate-600 max-w-xs mx-auto">
-                Your request has been routed to the community administrator for verification and execution.
+                Your request has been routed to the Pallimukk Brothers coordinator for immediate update.
               </p>
               <button
                 onClick={onClose}
-                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-white"
+                className="mt-4 px-6 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-white cursor-pointer"
               >
                 Close Window
               </button>
@@ -96,7 +94,7 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
 
                 <div className="space-y-2.5">
                   <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
-                    requestType === 'resting' ? 'border-amber-500 bg-amber-50/40' : 'border-slate-200 hover:bg-slate-50'
+                    requestType === 'resting' ? 'border-emerald-500 bg-emerald-50/40' : 'border-slate-200 hover:bg-slate-50'
                   }`}>
                     <input
                       type="radio"
@@ -104,21 +102,21 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
                       value="resting"
                       checked={requestType === 'resting'}
                       onChange={() => setRequestType('resting')}
-                      className="mt-0.5 text-red-600"
+                      className="mt-0.5 text-emerald-600 cursor-pointer"
                     />
                     <div>
                       <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-amber-600" />
-                        Temporarily mark as Resting / Unavailable
+                        <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                        Temporarily mark as Resting (വിശ്രമത്തിൽ)
                       </div>
                       <p className="text-[11px] text-slate-500 mt-0.5">
-                        Recommended if you recently donated blood, are unwell, or traveling outside Kerala.
+                        Recommended if you recently donated blood, are unwell, or traveling outside.
                       </p>
                     </div>
                   </label>
 
                   <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
-                    requestType === 'update' ? 'border-blue-500 bg-blue-50/40' : 'border-slate-200 hover:bg-slate-50'
+                    requestType === 'update' ? 'border-teal-500 bg-teal-50/40' : 'border-slate-200 hover:bg-slate-50'
                   }`}>
                     <input
                       type="radio"
@@ -126,20 +124,20 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
                       value="update"
                       checked={requestType === 'update'}
                       onChange={() => setRequestType('update')}
-                      className="mt-0.5 text-red-600"
+                      className="mt-0.5 text-teal-600 cursor-pointer"
                     />
                     <div>
                       <div className="text-xs font-bold text-slate-900">
-                        Update Contact Number or District
+                        Update Contact Number or Location
                       </div>
                       <p className="text-[11px] text-slate-500 mt-0.5">
-                        Change phone number, WhatsApp preference, or registered location.
+                        Change phone number, WhatsApp preference, or registered place.
                       </p>
                     </div>
                   </label>
 
                   <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
-                    requestType === 'delete' ? 'border-red-500 bg-red-50/40' : 'border-slate-200 hover:bg-slate-50'
+                    requestType === 'delete' ? 'border-rose-500 bg-rose-50/40' : 'border-slate-200 hover:bg-slate-50'
                   }`}>
                     <input
                       type="radio"
@@ -147,15 +145,15 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
                       value="delete"
                       checked={requestType === 'delete'}
                       onChange={() => setRequestType('delete')}
-                      className="mt-0.5 text-red-600"
+                      className="mt-0.5 text-rose-600 cursor-pointer"
                     />
                     <div>
-                      <div className="text-xs font-bold text-red-600 flex items-center gap-1.5">
+                      <div className="text-xs font-bold text-rose-600 flex items-center gap-1.5">
                         <UserX className="w-3.5 h-3.5" />
                         Permanently Delete My Directory Listing
                       </div>
                       <p className="text-[11px] text-slate-500 mt-0.5">
-                        Exercise your right to be forgotten. All public contact details will be removed immediately.
+                        Your contact details will be removed immediately from public listings.
                       </p>
                     </div>
                   </label>
@@ -166,10 +164,10 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
                 <button
                   type="button"
                   onClick={handleSendRequest}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm text-white bg-red-600 hover:bg-red-700 shadow-md transition"
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition cursor-pointer"
                 >
                   <MessageSquare className="w-4 h-4" />
-                  <span>Notify Admin via WhatsApp</span>
+                  <span>Notify Coordinator via WhatsApp</span>
                 </button>
               </div>
             </>

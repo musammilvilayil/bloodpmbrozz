@@ -213,7 +213,7 @@ export default function AdminPortal({ isOpen, onClose, onRefreshPublicData }) {
         {/* Top Header */}
         <div className="flex items-center justify-between px-6 py-4 bg-slate-900 text-white shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-red-600 text-white">
+            <div className="p-2 rounded-xl bg-emerald-600 text-white">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -221,12 +221,12 @@ export default function AdminPortal({ isOpen, onClose, onRefreshPublicData }) {
                 <h3 className="text-lg font-bold font-['Outfit']">
                   Admin Management Portal
                 </h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-red-300 border border-slate-700">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-emerald-300 border border-slate-700">
                   Protected System
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Blood PM Brozz Donor Verification & Authorization Control
+                Pallimukk Brothers Blood Index Coordinator Control
               </p>
             </div>
           </div>

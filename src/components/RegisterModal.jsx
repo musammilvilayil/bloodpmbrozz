@@ -22,7 +22,7 @@ export default function RegisterModal({ isOpen, onClose }) {
       <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-red-600 to-rose-600 text-white">
+        <div className="flex items-center justify-between px-6 py-5 bg-gradient-to-r from-emerald-600 to-teal-700 text-white">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-white/20">
               <Heart className="w-5 h-5 fill-white" />
@@ -31,15 +31,15 @@ export default function RegisterModal({ isOpen, onClose }) {
               <h3 className="text-xl font-bold font-['Outfit']">
                 Register as Blood Donor
               </h3>
-              <p className="text-xs text-red-100 font-medium">
-                Official Blood PM Brozz Community Registration
+              <p className="text-xs text-emerald-100 font-medium">
+                Pallimukk Brothers (പള്ളിമുക്ക് ബ്രദേഴ്സ്)
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition"
+            className="p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -47,33 +47,33 @@ export default function RegisterModal({ isOpen, onClose }) {
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto space-y-6">
+        <div className="p-6 overflow-y-auto space-y-5">
           
           {/* Explanation Box */}
-          <div className="bg-red-50/80 rounded-2xl p-5 border border-red-100">
-            <h4 className="font-bold text-red-950 text-sm mb-2 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-red-600" />
+          <div className="bg-emerald-50/80 rounded-2xl p-4 sm:p-5 border border-emerald-100">
+            <h4 className="font-bold text-emerald-950 text-sm mb-2 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
               How the Registration Works
             </h4>
-            <ol className="text-xs text-red-900/90 space-y-2 list-decimal list-inside leading-relaxed">
+            <ol className="text-xs text-emerald-900/90 space-y-1.5 list-decimal list-inside leading-relaxed">
               <li>
-                <strong>Official Google Form:</strong> You will submit your details using the official Blood PM Brozz Google Form.
+                <strong>Official Google Form:</strong> Submit your details using the official Google Form.
               </li>
               <li>
-                <strong>Synchronized to Google Sheet:</strong> Your responses are automatically stored in the protected community spreadsheet.
+                <strong>Instant Google Sheet Sync:</strong> Your response is automatically added to the Pallimukk Brothers spreadsheet.
               </li>
               <li>
-                <strong>Privacy & Explicit Consent:</strong> Your phone number is only listed if you give explicit consent to be contacted for emergency blood donation.
+                <strong>Privacy & Explicit Consent:</strong> Your contact numbers are only displayed with your voluntary consent.
               </li>
               <li>
-                <strong>Availability Control:</strong> You can request to toggle your availability (e.g. when resting between donations) at any time.
+                <strong>Availability Control:</strong> You can update your availability (നാട്ടിലുണ്ട് / വിശ്രമത്തിൽ) whenever needed.
               </li>
             </ol>
           </div>
 
           {/* Direct CTA */}
-          <div className="text-center py-4 space-y-4">
-            <p className="text-sm text-slate-600">
+          <div className="text-center py-2 space-y-3">
+            <p className="text-xs sm:text-sm text-slate-600">
               Click below to complete the short 2-minute registration form:
             </p>
 
@@ -82,7 +82,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                 href={GOOGLE_FORM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-600/30 transition transform hover:-translate-y-0.5"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/25 transition transform hover:-translate-y-0.5 cursor-pointer"
               >
                 <FileText className="w-4 h-4" />
                 <span>Open Registration Form</span>
@@ -92,9 +92,9 @@ export default function RegisterModal({ isOpen, onClose }) {
               <button
                 type="button"
                 onClick={() => setEmbedMode(!embedMode)}
-                className="w-full sm:w-auto px-5 py-3.5 rounded-xl text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+                className="w-full sm:w-auto px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
               >
-                {embedMode ? "Hide Embedded Form" : "Fill Inside Website"}
+                {embedMode ? "Hide Form" : "Fill Inside Website"}
               </button>
             </div>
           </div>
@@ -121,20 +121,20 @@ export default function RegisterModal({ isOpen, onClose }) {
           )}
 
           {/* Privacy Note */}
-          <div className="text-xs text-slate-500 border-t border-slate-100 pt-4 flex items-start gap-2">
+          <div className="text-[11px] text-slate-500 border-t border-slate-100 pt-3 flex items-start gap-2">
             <HelpCircle className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
             <p>
-              Privacy Notice: Your information is handled responsibly. We never sell or share contact details with advertisers. For record correction or immediate removal, message a WhatsApp group admin with your name and phone.
+              Your contact details are purely for community emergency blood coordination. You can update or deactivate your listing anytime.
             </p>
           </div>
 
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <div className="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition"
+            className="px-5 py-1.5 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200 transition cursor-pointer"
           >
             Close
           </button>

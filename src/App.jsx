@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import DonorDirectory from './components/DonorDirectory';
-import BloodGuide from './components/BloodGuide';
 import Footer from './components/Footer';
 import RegisterModal from './components/RegisterModal';
 import RemovalModal from './components/RemovalModal';
@@ -135,17 +134,18 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-['Plus_Jakarta_Sans'] selection:bg-red-500 selection:text-white">
-      
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-['Plus_Jakarta_Sans'] selection:bg-emerald-600 selection:text-white">
       {/* 1. Header Navigation */}
       <Navbar 
         onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenRegister={() => setIsRegisterOpen(true)}
         autoSyncEnabled={autoSyncEnabled}
         secondsAgo={secondsAgo}
+        onRefresh={() => fetchDonors(true, false)}
+        isSyncing={isSyncing}
       />
 
-      {/* 2. Hero Section */}
+      {/* 2. Hero & Live Stats */}
       <main className="flex-1">
         <Hero 
           stats={stats}
@@ -153,7 +153,7 @@ export default function App() {
           onScrollToSearch={handleScrollToSearch}
         />
 
-        {/* 3. Searchable Donor Directory with Dynamic Live Sync Controls */}
+        {/* 3. Searchable Blood Index with Sorting & Filters */}
         <DonorDirectory 
           donors={donors}
           loading={loading}
@@ -166,9 +166,6 @@ export default function App() {
           onOpenRemoval={(donor) => setRemovalDonor(donor)}
           onOpenRegister={() => setIsRegisterOpen(true)}
         />
-
-        {/* 4. Blood Compatibility & Eligibility Guide */}
-        <BloodGuide />
       </main>
 
       {/* 5. Footer */}
