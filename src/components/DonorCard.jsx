@@ -5,15 +5,12 @@ import {
   MapPin, 
   CheckCircle2, 
   Clock, 
-  Copy, 
-  Check, 
   Share2,
   Droplet 
 } from 'lucide-react';
 import { tactileTap } from '../utils/haptics';
 
 export default function DonorCard({ donor, onOpenRemoval }) {
-  const [copied, setCopied] = useState(false);
   const isAvailable = donor.isAvailable;
   
   // Initials from donor name
@@ -33,26 +30,24 @@ export default function DonorCard({ donor, onOpenRemoval }) {
     return `https://wa.me/${cleanNumber}?text=${message}`;
   };
 
-  const handleCopyPhone = (phone) => {
-    if (!phone) return;
-    tactileTap('success');
-    navigator.clipboard.writeText(phone);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  // Only share contact details when the donor has explicitly opted in.
+  const canSharePhone = Boolean(donor.allowCall && donor.phone);
+  const canShareWhatsApp = Boolean(donor.allowWhatsApp && donor.whatsapp);
+  const canShareContact = canSharePhone || canShareWhatsApp;
 
-  // Share individual donor details to WhatsApp for bystanders
   const handleShareDonor = () => {
+    if (!canShareContact) return;
     tactileTap('light');
-    const text = encodeURIComponent(
-      `🩸 *Blood Donor Contact - Pallimukk Brothers, Mynagappally*\n` +
-      `👤 Name: ${donor.name}\n` +
-      `💉 Blood Group: *${donor.bloodGroup}*\n` +
-      `📍 Location: ${donor.district || 'Mynagappally'}\n` +
-      `📞 Phone: ${donor.phone}\n` +
-      `🔗 Directory: https://bloodpmbrozz.vercel.app`
-    );
-    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    const lines = [
+      '🩸 *Blood Donor Contact - Pallimukk Brothers, Mynagappally*',
+      `👤 Name: ${donor.name}`,
+      `💉 Blood Group: *${donor.bloodGroup}*`,
+      `📍 Location: ${donor.district || 'Mynagappally'}`,
+      ...(canSharePhone ? [`📞 Phone: ${donor.phone}`] : []),
+      ...(canShareWhatsApp ? [`💬 WhatsApp: ${donor.whatsapp}`] : []),
+      '🔗 Directory: https://bloodpmbrozz.vercel.app'
+    ];
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(lines.join('\\n'))}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -126,7 +121,9 @@ export default function DonorCard({ donor, onOpenRemoval }) {
           <div className="flex items-center gap-2">
             <button
               onClick={handleShareDonor}
-              className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-emerald-700 touch-spring p-1"
+              disabled={!canShareContact}
+              aria-label={canShareContact ? `Share ${donor.name}'s contact via WhatsApp` : 'Contact sharing unavailable'}
+              className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-emerald-700 touch-spring p-1 disabled:opacity-40 disabled:cursor-not-allowed"
               title="Share donor contact to WhatsApp"
             >
               <Share2 className="w-3.5 h-3.5" />
@@ -187,21 +184,8 @@ export default function DonorCard({ donor, onOpenRemoval }) {
 
         </div>
 
-        {/* Copy Phone & Details Bar */}
-        <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-50">
-          <div className="flex items-center gap-1.5 min-w-0">
-            {donor.phone && (
-              <button
-                onClick={() => handleCopyPhone(donor.phone)}
-                className="flex items-center gap-1 text-slate-600 hover:text-emerald-700 active:text-emerald-800 font-bold cursor-pointer touch-spring truncate"
-                title="Copy phone number"
-              >
-                {copied ? <Check className="w-3 h-3 text-emerald-600 shrink-0" /> : <Copy className="w-3 h-3 shrink-0" />}
-                <span className="truncate">{copied ? "Copied!" : donor.phone}</span>
-              </button>
-            )}
-          </div>
-
+        {/* Privacy-first footer: no phone number rendered in the card. */}
+        <div className="mt-2.5 flex items-center justify-end text-[11px] text-slate-400 pt-2 border-t border-slate-50">
           <button
             onClick={() => {
               tactileTap('light');
