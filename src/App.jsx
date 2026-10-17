@@ -13,8 +13,8 @@ import { tactileTap } from './utils/haptics';
 export default function App() {
   const [donors, setDonors] = useState([]);
   const [stats, setStats] = useState({
-    totalDonors: 1,
-    availableNow: 1,
+    totalDonors: 0,
+    availableNow: 0,
     bloodGroups: {},
     districts: {}
   });
@@ -59,7 +59,7 @@ export default function App() {
               type: 'new_donor',
               badge: 'New Donor Added',
               title: `${first.name} (${first.bloodGroup})`,
-              message: `Just added in ${first.district}! Ready for emergency assistance.`
+              message: `Just added in ${first.district}! Please confirm availability directly.`
             });
           } else {
             // 2. Detect availability status changes
