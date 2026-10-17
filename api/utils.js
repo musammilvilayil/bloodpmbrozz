@@ -67,15 +67,25 @@ export function normalizePhoneNumber(raw) {
 /**
  * Formats district name cleanly
  */
-export function formatDistrict(raw) {
-  if (!raw) return "Kerala";
-  let dist = String(raw).trim();
-  if (!dist) return "Kerala";
-  
+export function formatDistrict(raw, residence = "") {
+  let dist = String(raw || "").trim();
+  const res = String(residence || "").trim().toLowerCase();
+
+  // If district is empty or generic
+  if (!dist || dist.toLowerCase() === "kerala") {
+    if (res.includes("പുറത്ത") || res.includes("പുറം") || res.includes("ഗൾഫ്") || res.includes("outside") || res.includes("abroad")) {
+      return "Outside Kerala (പുറത്താണ്)";
+    }
+    if (res.includes("നാട്ട") || res === "kerala") {
+      return dist ? "Kerala" : "Kerala (നാട്ടിൽ)";
+    }
+    return dist || "Kerala";
+  }
+
   // Check against known Kerala districts for case insensitivity
   const found = KERALA_DISTRICTS.find(d => d.toLowerCase() === dist.toLowerCase());
   if (found) return found;
-  
+
   // Capitalize words
   return dist
     .split(/\s+/)
@@ -137,24 +147,35 @@ export function parseCSV(csvText) {
 export function mapRowsToDonors(rows) {
   if (!rows || rows.length <= 1) return [];
   
-  const headers = rows[0].map(h => h.trim());
+  const headers = rows[0].map(h => (h || "").trim());
   const dataRows = rows.slice(1);
   
-  const getCol = (row, name) => {
-    const idx = headers.indexOf(name);
-    return idx !== -1 ? (row[idx] || "").trim() : "";
+  const getCol = (row, candidates) => {
+    if (!Array.isArray(candidates)) candidates = [candidates];
+    for (const cand of candidates) {
+      const candClean = cand.toLowerCase().trim();
+      const idx = headers.findIndex(h => {
+        const hClean = h.toLowerCase().trim();
+        return hClean === candClean || hClean.includes(candClean);
+      });
+      if (idx !== -1 && row[idx] !== undefined && row[idx] !== null) {
+        const val = String(row[idx]).trim();
+        if (val) return val;
+      }
+    }
+    return "";
   };
   
   return dataRows.map((row, index) => {
-    const timestamp = getCol(row, "Timestamp");
-    const name = getCol(row, "Full Name");
-    const rawBlood = getCol(row, "Blood Group");
-    const rawMobile = getCol(row, "Mobile Number");
-    const rawWA = getCol(row, "WhatsApp Number");
-    const currentResidence = getCol(row, "Current Residence");
-    const district = getCol(row, "District or Current Country");
-    const availableInKerala = getCol(row, "Currently Available in Kerala?");
-    const consent = getCol(row, "Consent");
+    const timestamp = getCol(row, ["Timestamp", "സമയമുദ്ര"]);
+    const name = getCol(row, ["Full Name", "Name", "പേര്", "മുഴുവൻ പേര്"]);
+    const rawBlood = getCol(row, ["Blood Group", "രക്തഗ്രൂപ്പ്", "രക്ത ഗ്രൂപ്പ്"]);
+    const rawMobile = getCol(row, ["Mobile Number", "Mobile", "Phone Number", "Phone", "മൊബൈൽ നമ്പർ", "ഫോൺ"]);
+    const rawWA = getCol(row, ["WhatsApp Number", "WhatsApp", "വാട്സാപ്പ്", "വാട്ട്സ്ആപ്പ്"]);
+    const currentResidence = getCol(row, ["ഇപ്പോൾ നാട്ടിലാണോ പുറത്താണോ", "Current Residence", "Residence", "സ്ഥലം", "നാട്ടിലാണോ"]);
+    const rawDistrict = getCol(row, ["District or Current Country", "District", "Country", "ജില്ല", "രാജ്യം"]);
+    const availableInKerala = getCol(row, ["Currently Available in Kerala?", "Available in Kerala?", "ലഭ്യമാണോ?", "ലഭ്യമാണോ"]);
+    const consent = getCol(row, ["Consent", "സമ്മതം"]);
     
     const bloodGroup = normalizeBloodGroup(rawBlood);
     const mobile = normalizePhoneNumber(rawMobile);
@@ -167,20 +188,40 @@ export function mapRowsToDonors(rows) {
     }
     
     // Check metadata columns if present (from Apps Script)
-    const adminStatus = getCol(row, "Admin_Status") || "APPROVED";
-    const availOverride = getCol(row, "Availability_Override") || "AUTO";
-    const callConsent = getCol(row, "Public_Call_Consent") || "YES";
-    const waConsent = getCol(row, "Public_WhatsApp_Consent") || (whatsapp ? "YES" : "NO");
-    const adminNotes = getCol(row, "Admin_Notes") || "";
+    const adminStatus = getCol(row, ["Admin_Status"]) || "APPROVED";
+    const availOverride = getCol(row, ["Availability_Override"]) || "AUTO";
+    const callConsent = getCol(row, ["Public_Call_Consent"]) || "YES";
+    const waConsent = getCol(row, ["Public_WhatsApp_Consent"]) || (whatsapp ? "YES" : "NO");
+    const adminNotes = getCol(row, ["Admin_Notes"]) || "";
     
     // ID generation
-    const id = getCol(row, "Donor_ID") || `DNR-${1000 + index + 1}`;
+    const id = getCol(row, ["Donor_ID"]) || `DNR-${1000 + index + 1}`;
     
-    // Calculated availability
-    const isAvailable = availOverride === "AVAILABLE" ||
-      (availOverride !== "UNAVAILABLE" && (availableInKerala.toLowerCase() === "yes" || availableInKerala.toLowerCase() === "true"));
+    // Calculated availability: checks override, availableInKerala, and residence (Malayalam & English)
+    let isAvailable = true;
+    if (availOverride === "AVAILABLE") {
+      isAvailable = true;
+    } else if (availOverride === "UNAVAILABLE") {
+      isAvailable = false;
+    } else {
+      const availLower = availableInKerala.toLowerCase();
+      const resLower = currentResidence.toLowerCase();
+
+      if (availLower === "yes" || availLower === "true" || availLower === "ഉണ്ട്" || availLower === "അതെ") {
+        isAvailable = true;
+      } else if (availLower === "no" || availLower === "false" || availLower === "ഇല്ല") {
+        isAvailable = false;
+      } else if (resLower.includes("നാട്ട") || resLower === "kerala" || resLower.includes("കേരള")) {
+        isAvailable = true;
+      } else if (resLower.includes("പുറത്ത") || resLower.includes("പുറം") || resLower.includes("ഗൾഫ്") || resLower.includes("outside") || resLower.includes("abroad")) {
+        isAvailable = false;
+      } else {
+        isAvailable = true;
+      }
+    }
     
     const hasConsent = consent.length > 5;
+    const district = formatDistrict(rawDistrict, currentResidence);
     
     return {
       id,
@@ -192,7 +233,7 @@ export function mapRowsToDonors(rows) {
       mobileNumber: mobile,
       whatsappNumber: whatsapp,
       currentResidence,
-      district: formatDistrict(district),
+      district,
       availableInKerala,
       consentText: consent,
       hasConsent,
