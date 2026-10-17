@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Phone, 
   MessageCircle, 
@@ -47,7 +47,7 @@ export default function DonorCard({ donor, onOpenRemoval }) {
       ...(canShareWhatsApp ? [`💬 WhatsApp: ${donor.whatsapp}`] : []),
       '🔗 Directory: https://bloodpmbrozz.vercel.app'
     ];
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(lines.join('\\n'))}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
