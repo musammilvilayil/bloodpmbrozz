@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { 
   Heart, 
   Search, 
@@ -10,11 +9,13 @@ import {
   RefreshCw,
   Sparkles
 } from 'lucide-react';
+import { tactileTap } from '../utils/haptics';
 
 export default function Navbar({ onOpenAdmin, onOpenRegister, autoSyncEnabled = true, secondsAgo = 0, onRefresh, isSyncing = false }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollTo = (id) => {
+    tactileTap('light');
     setMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
@@ -28,8 +29,8 @@ export default function Navbar({ onOpenAdmin, onOpenRegister, autoSyncEnabled = 
         <div className="flex items-center justify-between h-16 sm:h-20">
           
           {/* Logo & Brand */}
-          <div className="flex items-center gap-2.5 sm:gap-3 cursor-pointer min-w-0" onClick={() => scrollTo('hero')}>
-            <div className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/25 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 cursor-pointer min-w-0 touch-spring" onClick={() => scrollTo('hero')}>
+            <div className="relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/25 shrink-0">
               <Heart className="w-5 h-5 fill-white animate-pulse" />
               <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>

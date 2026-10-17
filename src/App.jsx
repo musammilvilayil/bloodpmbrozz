@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Droplet, RefreshCw, Phone, UserPlus } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import DonorDirectory from './components/DonorDirectory';
@@ -7,6 +8,7 @@ import RegisterModal from './components/RegisterModal';
 import RemovalModal from './components/RemovalModal';
 import AdminPortal from './components/AdminPortal';
 import LiveToast from './components/LiveToast';
+import { tactileTap } from './utils/haptics';
 
 export default function App() {
   const [donors, setDonors] = useState([]);
@@ -174,36 +176,50 @@ export default function App() {
         onOpenRegister={() => setIsRegisterOpen(true)}
       />
 
-      {/* Mobile Sticky Quick Action Bar (Native App Feel on Phones) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-emerald-100 shadow-lg px-3 py-2 flex items-center justify-around gap-2">
+      {/* Mobile Sticky Quick Action Bar (Native App Dock Feel on Phones) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-emerald-100/90 shadow-2xl px-2.5 py-1.5 flex items-center justify-between gap-1 safe-area-pb">
         <button
-          onClick={handleScrollToSearch}
-          className="flex-1 flex flex-col items-center justify-center py-1 text-slate-700 hover:text-emerald-700 active:scale-95 transition cursor-pointer"
+          onClick={() => {
+            tactileTap('light');
+            handleScrollToSearch();
+          }}
+          className="flex-1 flex flex-col items-center justify-center py-1 rounded-xl text-slate-700 hover:text-emerald-700 touch-spring cursor-pointer"
         >
-          <span className="text-[10px] font-bold mt-0.5">Blood Groups ({donors.length})</span>
+          <Droplet className="w-4 h-4 text-emerald-600 animate-liquid-wave" />
+          <span className="text-[10px] font-black mt-0.5 tracking-tight">Groups ({donors.length})</span>
         </button>
 
         <button
-          onClick={() => fetchDonors(true, false)}
+          onClick={() => {
+            tactileTap('medium');
+            fetchDonors(true, false);
+          }}
           disabled={isSyncing}
-          className="flex-1 flex flex-col items-center justify-center py-1 text-emerald-800 hover:text-emerald-900 active:scale-95 transition"
+          className="flex-1 flex flex-col items-center justify-center py-1 rounded-xl text-emerald-800 hover:text-emerald-900 touch-spring"
         >
-          <span className="text-[10px] font-bold mt-0.5">
+          <RefreshCw className={`w-4 h-4 text-emerald-600 ${isSyncing ? 'animate-spin' : ''}`} />
+          <span className="text-[10px] font-black mt-0.5 tracking-tight">
             {isSyncing ? "Syncing..." : `${secondsAgo}s Sync`}
           </span>
         </button>
 
         <a
           href="tel:108"
-          className="flex-1 flex flex-col items-center justify-center py-1 text-slate-700 hover:text-emerald-700 active:scale-95 transition"
+          onClick={() => tactileTap('warning')}
+          className="flex-1 flex flex-col items-center justify-center py-1 rounded-xl text-slate-700 hover:text-emerald-700 touch-spring"
         >
-          <span className="text-[10px] font-bold mt-0.5">Ambulance 108</span>
+          <Phone className="w-4 h-4 text-emerald-700" />
+          <span className="text-[10px] font-black mt-0.5 tracking-tight">Helpline 108</span>
         </a>
 
         <button
-          onClick={() => setIsRegisterOpen(true)}
-          className="flex-1.5 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs shadow-sm"
+          onClick={() => {
+            tactileTap('light');
+            setIsRegisterOpen(true);
+          }}
+          className="flex-1.2 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 active:scale-95 touch-spring text-white font-black text-xs shadow-md shadow-emerald-600/25"
         >
+          <UserPlus className="w-3.5 h-3.5" />
           <span>Register</span>
         </button>
       </div>

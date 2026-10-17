@@ -29,12 +29,17 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
       
-      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div className="relative w-full max-w-lg bg-white rounded-t-[32px] sm:rounded-3xl shadow-2xl border border-slate-200 overflow-hidden animate-slide-up-native">
         
+        {/* Native Mobile Drag Handle Bar */}
+        <div className="sm:hidden pt-2.5 pb-1 bg-slate-900 flex justify-center">
+          <div className="w-12 h-1.5 bg-slate-700 rounded-full"></div>
+        </div>
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 bg-slate-900 text-white">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 bg-slate-900 text-white">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-slate-800">
               <ShieldAlert className="w-5 h-5 text-emerald-400" />
