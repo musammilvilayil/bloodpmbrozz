@@ -17,9 +17,12 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
   const availableCount = stats?.availableNow || 0;
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-4 pb-6 sm:pt-10 sm:pb-12 bg-gradient-to-b from-[#071A2E] via-[#0B3041] to-[#071A2E] border-b border-emerald-100/70">
+    <section id="hero" className="relative overflow-hidden pt-12 pb-12 sm:pt-20 sm:pb-20 bg-[#071A2E] border-b border-emerald-100/70">
       
-      {/* Background Emerald Ambient Glow */}
+      {/* Coastal lighthouse-inspired atmospheric hero backdrop */}
+      <div className="absolute inset-0 bg-cover bg-center opacity-35 pointer-events-none" style={{backgroundImage:"url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=80')"}} />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#071A2E]/95 via-[#071A2E]/80 to-[#071A2E]/40 pointer-events-none" />
+      {/* Background Emerald Ambient Glow */
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[340px] sm:w-[640px] h-[220px] sm:h-[300px] bg-gradient-to-b from-emerald-200/40 via-teal-100/20 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -39,7 +42,7 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
 
         {/* Main Headline */}
         <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight font-['Outfit']">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight font-['Outfit']">
             Pallimukk Brothers <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-400">Blood Index</span>
           </h1>
           <p className="mt-2 text-xs sm:text-base text-slate-100 leading-relaxed font-normal max-w-xl mx-auto font-malayalam">
