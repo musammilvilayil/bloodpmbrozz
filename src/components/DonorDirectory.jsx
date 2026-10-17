@@ -31,6 +31,7 @@ export default function DonorDirectory({
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
   const [availableOnly, setAvailableOnly] = useState(false);
+  const [selectedContacts, setSelectedContacts] = useState([]);
 
   // Filter donors strictly by selected blood group
   const filteredDonors = useMemo(() => {
@@ -49,6 +50,29 @@ export default function DonorDirectory({
       return (b.rowIndex || 0) - (a.rowIndex || 0);
     });
   }, [donors, selectedBloodGroup, searchTerm, availableOnly]);
+
+
+  const consentedDonors = filteredDonors.filter(d => (d.allowCall && d.phone) || (d.allowWhatsApp && d.whatsapp));
+  const chosenDonors = consentedDonors.filter(d => selectedContacts.includes(String(d.id)));
+  const shareList = [
+    '🩸 *Pallimukk Brothers — Blood Donor Contacts*',
+    ...chosenDonors.map((d, i) => [
+      `${i + 1}. *${d.name}* (${d.bloodGroup})`,
+      `📍 ${d.district || 'Mynagappally'}`,
+      ...(d.allowCall && d.phone ? [`📞 ${d.phone}`] : []),
+      ...(d.allowWhatsApp && d.whatsapp ? [`💬 WhatsApp: ${d.whatsapp}`] : [])
+    ].join('\\n')),
+    'https://bloodpmbrozz.vercel.app'
+  ].join('\\n\\n');
+  const toggleContact = id => setSelectedContacts(current => current.includes(String(id)) ? current.filter(x => x !== String(id)) : [...current, String(id)]);
+  const shareContacts = () => {
+    if (!chosenDonors.length) return;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareList)}`, '_blank', 'noopener,noreferrer');
+  };
+  const copyContacts = async () => {
+    if (!chosenDonors.length) return;
+    try { await navigator.clipboard.writeText(shareList); } catch { /* Clipboard permission denied */ }
+  };
 
   // Group counts for blood group pills
   const bloodGroupCounts = useMemo(() => {
@@ -204,6 +228,20 @@ export default function DonorDirectory({
             Available donors only
           </label>
           <p className="text-xs text-slate-500 mt-2">{filteredDonors.length} matching donors</p>
+        </div>
+
+        <div className="rounded-3xl bg-emerald-950 text-white p-4 sm:p-5 mb-4">
+          <h3 className="font-extrabold flex items-center gap-2"><Share2 className="w-4 h-4" /> Share selected donors</h3>
+          <p className="text-xs text-emerald-100 mt-1">Select donor cards below to share their permitted contact details.</p>
+          <div className="flex items-center gap-2 mt-3">
+            <button type="button" onClick={() => setSelectedContacts(consentedDonors.map(d => String(d.id)))} className="px-3 py-2 rounded-xl bg-white/15 text-xs font-bold">Select all ({consentedDonors.length})</button>
+            <button type="button" onClick={() => setSelectedContacts([])} className="px-3 py-2 rounded-xl bg-white/10 text-xs font-bold">Clear</button>
+            <span className="ml-auto text-xs font-bold">{chosenDonors.length} selected</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-3">
+            <button type="button" disabled={!chosenDonors.length} onClick={shareContacts} className="h-11 rounded-xl bg-emerald-500 text-emerald-950 font-extrabold text-xs sm:text-sm disabled:opacity-40">WhatsApp Share</button>
+            <button type="button" disabled={!chosenDonors.length} onClick={copyContacts} className="h-11 rounded-xl bg-white/15 text-white font-bold text-xs sm:text-sm disabled:opacity-40 flex justify-center items-center gap-2"><Copy className="w-4 h-4" /> Copy List</button>
+          </div>
         </div>
         {/* 2. One-Tap Share to WhatsApp Status & Groups Component */}
         <WhatsAppStatusShare selectedBloodGroup={selectedBloodGroup} />
