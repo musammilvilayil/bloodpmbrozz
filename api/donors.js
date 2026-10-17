@@ -8,6 +8,7 @@ import {
 // Server-side cache for high performance & avoiding Google Sheets rate-limiting
 let cachedDonors = null;
 let lastCacheTime = 0;
+let lastSyncStatus = "OK"; // "OK" | "RESTRICTED_401" | "ERROR"
 const CACHE_TTL_MS = 10 * 1000; // 10 seconds for real-time dynamic syncing
 
 // In-memory admin overrides for quick approval & status adjustments
@@ -56,12 +57,19 @@ export async function fetchLiveDonors(forceRefresh = false) {
         if (parsed.length > 0) {
           cachedDonors = parsed;
           lastCacheTime = now;
+          lastSyncStatus = "OK";
           return parsed;
         }
       }
     }
+    if (res.status === 401) {
+      lastSyncStatus = "RESTRICTED_401";
+    }
     throw new Error(`Google Sheet returned status ${res.status}`);
   } catch (err) {
+    if (err.message && err.message.includes("401")) {
+      lastSyncStatus = "RESTRICTED_401";
+    }
     console.warn("Live Google Sheet sync status:", err.message);
     // If cached version exists, serve stale
     if (cachedDonors) return cachedDonors;
@@ -160,6 +168,7 @@ export default async function handler(req, res) {
       stats,
       donors: publicDonors,
       source: "Google Sheets Live Sync",
+      sheetStatus: lastSyncStatus,
       lastSync: new Date(lastCacheTime || Date.now()).toISOString()
     };
 

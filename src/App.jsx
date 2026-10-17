@@ -22,6 +22,7 @@ export default function App() {
   const [lastSyncTime, setLastSyncTime] = useState(new Date());
   const [secondsAgo, setSecondsAgo] = useState(0);
   const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
+  const [sheetStatus, setSheetStatus] = useState("OK");
   const [toast, setToast] = useState(null);
 
   // Keep ref of donors to calculate dynamic diffs without stale closures
@@ -41,6 +42,9 @@ export default function App() {
       const data = await res.json();
       
       if (data.success && Array.isArray(data.donors)) {
+        if (data.sheetStatus) {
+          setSheetStatus(data.sheetStatus);
+        }
         const newDonors = data.donors;
         const prevDonors = prevDonorsRef.current;
 
@@ -156,6 +160,7 @@ export default function App() {
           isSyncing={isSyncing}
           secondsAgo={secondsAgo}
           autoSyncEnabled={autoSyncEnabled}
+          sheetStatus={sheetStatus}
           onToggleAutoSync={() => setAutoSyncEnabled(prev => !prev)}
           onRefresh={() => fetchDonors(true, false)}
           onOpenRemoval={(donor) => setRemovalDonor(donor)}

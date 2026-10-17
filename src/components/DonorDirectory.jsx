@@ -8,7 +8,8 @@ import {
   Sparkles, 
   RefreshCw, 
   AlertCircle, 
-  CheckCircle2 
+  CheckCircle2,
+  ExternalLink 
 } from 'lucide-react';
 import DonorCard from './DonorCard';
 import { VALID_BLOOD_GROUPS, KERALA_DISTRICTS } from '../../api/utils';
@@ -19,6 +20,7 @@ export default function DonorDirectory({
   isSyncing = false,
   secondsAgo = 0,
   autoSyncEnabled = true,
+  sheetStatus = "OK",
   onToggleAutoSync,
   onRefresh, 
   onOpenRemoval,
@@ -324,6 +326,30 @@ export default function DonorDirectory({
             <span>Auto-refreshes every 15s</span>
           </div>
         </div>
+
+        {/* Google Sheet Access Notice if restricted */}
+        {sheetStatus === 'RESTRICTED_401' && (
+          <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+            <div className="flex items-start gap-2.5">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-sm">Google Sheet Live Sync Notice (401 Restricted):</p>
+                <p className="text-amber-800/90 mt-0.5 leading-relaxed">
+                  Google Sheets is currently set to restricted access. To dynamically sync all newly registered donors live, open your Google Sheet &gt; click <strong>Share (പങ്കിടുക)</strong> &gt; set General Access to <strong>"Anyone with the link" (ലിങ്ക് ഉള്ള ആർക്കും കാണാം - Viewer)</strong>.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://docs.google.com/spreadsheets/d/1zDtsboLMoDs8NMgDqmUFxedtULj5HasnXsCQdSXGVI0/edit"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 px-3.5 py-2 rounded-xl font-bold bg-amber-600 hover:bg-amber-700 text-white transition text-xs flex items-center gap-1.5 shadow-sm"
+            >
+              <span>Open Sheet Settings</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        )}
 
         {/* Donor Cards Grid */}
         {loading ? (
