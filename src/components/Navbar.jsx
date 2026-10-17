@@ -43,14 +43,14 @@ export default function Navbar({ onOpenAdmin, onOpenRegister, autoSyncEnabled = 
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="text-base sm:text-2xl font-black tracking-tight text-slate-900 font-['Outfit'] truncate">
-                  PALLIMUKK <span className="text-emerald-600">BROTHERS</span>
+                  Life<span className="text-emerald-600">Drop</span>
                 </span>
                 <span className="hidden xs:inline-flex items-center px-2 py-0.2 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
-                  Blood Index
+                  Every Drop Matters
                 </span>
               </div>
               <p className="text-[10px] sm:text-xs font-semibold text-slate-500 truncate flex items-center gap-1">
-                <span>മൈനാഗപ്പള്ളി പള്ളിമുക്ക്</span>
+                <span>Every Drop Matters. Every Life Counts.</span>
                 <span className="text-slate-300">•</span>
                 <span>Mynagappally, Kollam</span>
               </p>
