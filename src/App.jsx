@@ -178,9 +178,9 @@ export default function App() {
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-emerald-100 shadow-lg px-3 py-2 flex items-center justify-around gap-2">
         <button
           onClick={handleScrollToSearch}
-          className="flex-1 flex flex-col items-center justify-center py-1 text-slate-700 hover:text-emerald-700 active:scale-95 transition"
+          className="flex-1 flex flex-col items-center justify-center py-1 text-slate-700 hover:text-emerald-700 active:scale-95 transition cursor-pointer"
         >
-          <span className="text-[10px] font-bold mt-0.5">Find Donors ({donors.length})</span>
+          <span className="text-[10px] font-bold mt-0.5">Blood Groups ({donors.length})</span>
         </button>
 
         <button

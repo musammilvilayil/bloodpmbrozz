@@ -175,8 +175,8 @@ export default function Navbar({ onOpenAdmin, onOpenRegister, autoSyncEnabled = 
             onClick={() => scrollTo('donors-section')}
             className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-left font-semibold text-sm text-slate-800 hover:bg-emerald-50 hover:text-emerald-700 active:bg-emerald-100"
           >
-            <Search className="w-4 h-4 text-emerald-600" />
-            <span>Search & Filter Donors</span>
+            <Droplet className="w-4 h-4 text-emerald-600" />
+            <span>Blood Groups & Donors</span>
           </button>
 
           <a 

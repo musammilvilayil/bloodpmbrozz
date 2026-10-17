@@ -53,8 +53,8 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
               onClick={onScrollToSearch}
               className="w-full xs:w-auto flex items-center justify-center gap-2 px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 active:scale-95 shadow-md shadow-emerald-600/25 transition cursor-pointer"
             >
-              <Search className="w-4 h-4" />
-              <span>Find Donors Now</span>
+              <Droplet className="w-4 h-4 fill-white" />
+              <span>View Blood Groups</span>
             </button>
             <button
               onClick={onOpenRegister}
