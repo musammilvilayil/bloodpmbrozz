@@ -23,10 +23,10 @@ export default function Footer({ onOpenAdmin, onOpenRegister }) {
             </div>
             <div>
               <span className="text-lg sm:text-xl font-black text-white tracking-tight font-['Outfit']">
-                PALLIMUKK <span className="text-emerald-400">BROTHERS</span>
+                Life<span className="text-emerald-400">Drop</span>
               </span>
               <p className="text-[11px] sm:text-xs text-slate-400">
-                Blood Index • പള്ളിമുക്ക് ബ്രദേഴ്സ് മൈനാഗപ്പള്ളി
+                Every Drop Matters. Every Life Counts.
               </p>
             </div>
           </div>
@@ -73,6 +73,8 @@ export default function Footer({ onOpenAdmin, onOpenRegister }) {
             <a href="https://zenithsoftworks.in" target="_blank" rel="noopener noreferrer" aria-label="Zenith Softworks website" className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-700/70 text-slate-200 hover:bg-cyan-700 hover:text-white transition"><Globe className="w-5 h-5" /></a>
           </div>
         </div>
+
+        <p className="mt-4 text-xs text-slate-400">A community initiative by Pallimukk Brothers, Mynagappally. LifeDrop is a donor directory, not a blood bank or medical service. Donor availability and medical suitability are not guaranteed. Contact the community to request correction or removal of a listing.</p>
 
         {/* Bottom Copyright & Disclaimer */}
         <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 text-center sm:text-left">
