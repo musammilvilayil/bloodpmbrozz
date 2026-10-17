@@ -7,7 +7,10 @@ import {
   Droplet,
   RotateCcw,
   Sparkles,
-  Heart
+  Heart,
+  Search,
+  Share2,
+  Copy
 } from 'lucide-react';
 import DonorCard from './DonorCard';
 import WhatsAppStatusShare from './WhatsAppStatusShare';
@@ -26,6 +29,8 @@ export default function DonorDirectory({
   onOpenRegister 
 }) {
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [availableOnly, setAvailableOnly] = useState(false);
 
   // Filter donors strictly by selected blood group
   const filteredDonors = useMemo(() => {
@@ -34,6 +39,8 @@ export default function DonorDirectory({
       list = donors.filter(d => d.bloodGroup === selectedBloodGroup);
     }
 
+    if (searchTerm.trim()) list = list.filter(d => [d.name, d.district, d.currentResidence].some(v => String(v || '').toLowerCase().includes(searchTerm.trim().toLowerCase())));
+    if (availableOnly) list = list.filter(d => d.isAvailable);
     // Sort available donors first for emergency convenience
     return [...list].sort((a, b) => {
       if (a.isAvailable !== b.isAvailable) {
@@ -41,7 +48,7 @@ export default function DonorDirectory({
       }
       return (b.rowIndex || 0) - (a.rowIndex || 0);
     });
-  }, [donors, selectedBloodGroup]);
+  }, [donors, selectedBloodGroup, searchTerm, availableOnly]);
 
   // Group counts for blood group pills
   const bloodGroupCounts = useMemo(() => {
@@ -185,6 +192,19 @@ export default function DonorDirectory({
           </div>
         </div>
 
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-emerald-100 shadow-sm mb-4">
+          <label htmlFor="donor-search" className="block text-sm font-extrabold text-slate-900 mb-2">Search donors by name or location</label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true" />
+            <input id="donor-search" type="search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Name, town or district" className="w-full h-12 pl-10 pr-4 rounded-2xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900" />
+          </div>
+          <label className="flex items-center gap-2 mt-3 text-sm font-semibold text-slate-700">
+            <input type="checkbox" checked={availableOnly} onChange={e => setAvailableOnly(e.target.checked)} className="w-4 h-4 accent-emerald-600" />
+            Available donors only
+          </label>
+          <p className="text-xs text-slate-500 mt-2">{filteredDonors.length} matching donors</p>
+        </div>
         {/* 2. One-Tap Share to WhatsApp Status & Groups Component */}
         <WhatsAppStatusShare selectedBloodGroup={selectedBloodGroup} />
 
