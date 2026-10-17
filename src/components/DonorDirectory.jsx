@@ -156,63 +156,19 @@ export default function DonorDirectory({
             )}
           </div>
 
-          {/* Liquid Blood Droplets Bar (Horizontal momentum scroll on mobile, wrapped on desktop) */}
-          <div className="flex flex-nowrap sm:flex-wrap items-center gap-2.5 overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0 py-1.5 touch-pan-x">
-            
-            {/* ALL Capsule */}
-            <button
-              onClick={() => handleSelectBloodGroup('ALL')}
-              className={`relative overflow-hidden shrink-0 flex items-center gap-2.5 px-4 sm:px-5 py-2.5 rounded-2xl font-black transition-all cursor-pointer touch-spring ${
-                selectedBloodGroup === 'ALL'
-                  ? 'bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md shadow-emerald-600/30 ring-2 ring-emerald-500/50 scale-[1.03]'
-                  : 'bg-slate-50 hover:bg-emerald-50 text-slate-700 border border-slate-200/90'
-              }`}
-            >
-              {/* Subtle liquid meniscus indicator */}
-              {selectedBloodGroup === 'ALL' && (
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-white/40 animate-pulse"></div>
-              )}
-              <span className="text-xs sm:text-sm">All Donors</span>
-              <span className={`px-2 py-0.5 rounded-xl text-xs font-black ${
-                selectedBloodGroup === 'ALL' ? 'bg-white/20 text-white backdrop-blur-xs' : 'bg-emerald-100 text-emerald-800'
-              }`}>
-                {bloodGroupCounts.ALL || 0}
-              </span>
-            </button>
-
-            {/* 8 Liquid Droplet Capsules: A+, A-, B+, B-, AB+, AB-, O+, O- */}
-            {VALID_BLOOD_GROUPS.map(bg => {
-              const count = bloodGroupCounts[bg] || 0;
-              const isSelected = selectedBloodGroup === bg;
-              return (
-                <button
-                  key={bg}
-                  onClick={() => handleSelectBloodGroup(bg)}
-                  className={`relative overflow-hidden shrink-0 flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-2xl font-black transition-all cursor-pointer touch-spring ${
-                    isSelected
-                      ? 'bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md shadow-emerald-600/30 ring-2 ring-emerald-500/50 scale-[1.03]'
-                      : 'bg-slate-50 hover:bg-emerald-50 text-slate-700 border border-slate-200/90'
-                  }`}
-                >
-                  {/* Liquid drop visual glow when selected */}
-                  {isSelected && (
-                    <>
-                      <div className="absolute inset-x-0 bottom-0 h-1 bg-white/40 animate-pulse"></div>
-                      <Droplet className="w-3.5 h-3.5 fill-white text-white animate-liquid-wave" />
-                    </>
-                  )}
-                  
-                  <span className="text-sm sm:text-base font-['Outfit'] tracking-wide">{bg}</span>
-                  
-                  <span className={`px-2 py-0.5 rounded-xl text-xs font-black ${
-                    isSelected ? 'bg-white/20 text-white backdrop-blur-xs' : 'bg-emerald-100/90 text-emerald-800'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-
+          <div className="mb-3 flex items-center justify-between">
+            <button type="button" onClick={() => handleSelectBloodGroup('ALL')} className={`rounded-xl px-4 py-2 text-xs font-bold ${selectedBloodGroup === 'ALL' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800'}`}>All donors ({donors.length})</button>
+            <span className="text-xs text-slate-500">Select a blood group to filter</span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2 sm:gap-3">
+            {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => (
+              <button type="button" key={bg} onClick={() => handleSelectBloodGroup(bg)} aria-pressed={selectedBloodGroup === bg}
+                className={`min-w-0 rounded-2xl border px-2 py-4 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 ${selectedBloodGroup === bg ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white border-slate-200 text-[#071A2E] hover:border-emerald-400'}`}>
+                <span className="block text-2xl sm:text-3xl font-black tracking-tight">{bg}</span>
+                <span className="block text-lg font-extrabold mt-1">{bloodGroupCounts[bg] || 0}</span>
+                <span className={`block text-[11px] ${selectedBloodGroup === bg ? 'text-emerald-50' : 'text-slate-500'}`}>Donors</span>
+              </button>
+            ))}
           </div>
         </div>
 
