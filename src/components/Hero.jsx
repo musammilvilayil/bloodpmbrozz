@@ -22,7 +22,7 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
       {/* Coastal lighthouse-inspired atmospheric hero backdrop */}
       <div className="absolute inset-0 bg-cover bg-center opacity-35 pointer-events-none" style={{backgroundImage:"url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=80')"}} />
       <div className="absolute inset-0 bg-gradient-to-r from-[#071A2E]/95 via-[#071A2E]/80 to-[#071A2E]/40 pointer-events-none" />
-      {/* Background Emerald Ambient Glow */
+      {/* Background Emerald Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[340px] sm:w-[640px] h-[220px] sm:h-[300px] bg-gradient-to-b from-emerald-200/40 via-teal-100/20 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
