@@ -134,7 +134,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-['Plus_Jakarta_Sans'] selection:bg-emerald-600 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-['Plus_Jakarta_Sans'] selection:bg-emerald-600 selection:text-white pb-16 md:pb-0">
       {/* 1. Header Navigation */}
       <Navbar 
         onOpenAdmin={() => setIsAdminOpen(true)}
@@ -173,6 +173,40 @@ export default function App() {
         onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenRegister={() => setIsRegisterOpen(true)}
       />
+
+      {/* Mobile Sticky Quick Action Bar (Native App Feel on Phones) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-emerald-100 shadow-lg px-3 py-2 flex items-center justify-around gap-2">
+        <button
+          onClick={handleScrollToSearch}
+          className="flex-1 flex flex-col items-center justify-center py-1 text-slate-700 hover:text-emerald-700 active:scale-95 transition"
+        >
+          <span className="text-[10px] font-bold mt-0.5">Find Donors ({donors.length})</span>
+        </button>
+
+        <button
+          onClick={() => fetchDonors(true, false)}
+          disabled={isSyncing}
+          className="flex-1 flex flex-col items-center justify-center py-1 text-emerald-800 hover:text-emerald-900 active:scale-95 transition"
+        >
+          <span className="text-[10px] font-bold mt-0.5">
+            {isSyncing ? "Syncing..." : `${secondsAgo}s Sync`}
+          </span>
+        </button>
+
+        <a
+          href="tel:108"
+          className="flex-1 flex flex-col items-center justify-center py-1 text-slate-700 hover:text-emerald-700 active:scale-95 transition"
+        >
+          <span className="text-[10px] font-bold mt-0.5">Ambulance 108</span>
+        </a>
+
+        <button
+          onClick={() => setIsRegisterOpen(true)}
+          className="flex-1.5 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs shadow-sm"
+        >
+          <span>Register</span>
+        </button>
+      </div>
 
       {/* 6. Dynamic Live Notification Toast */}
       <LiveToast 
