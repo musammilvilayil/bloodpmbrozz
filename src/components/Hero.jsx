@@ -17,7 +17,7 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
   const availableCount = stats?.availableNow || 0;
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-4 pb-6 sm:pt-10 sm:pb-12 bg-gradient-to-b from-emerald-50/80 via-white to-slate-50 border-b border-emerald-100/70">
+    <section id="hero" className="relative overflow-hidden pt-4 pb-6 sm:pt-10 sm:pb-12 bg-gradient-to-b from-[#071A2E] via-[#0B3041] to-[#071A2E] border-b border-emerald-100/70">
       
       {/* Background Emerald Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[340px] sm:w-[640px] h-[220px] sm:h-[300px] bg-gradient-to-b from-emerald-200/40 via-teal-100/20 to-transparent rounded-full blur-3xl pointer-events-none" />
@@ -33,18 +33,18 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
             </span>
             <span className="truncate font-malayalam">പള്ളിമുക്ക് ബ്രദേഴ്സ്, മൈനാഗപ്പള്ളി</span>
             <span className="text-emerald-300">•</span>
-            <span className="text-emerald-700 font-bold uppercase tracking-wider text-[10px]">100% Voluntary</span>
+            <span className="text-emerald-700 font-bold uppercase tracking-wider text-[10px]">Community Initiative</span>
           </div>
         </div>
 
         {/* Main Headline */}
         <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight font-['Outfit']">
-            Blood Index <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700">Pallimukk Brothers</span>
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight font-['Outfit']">
+            Pallimukk Brothers <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-400">Blood Index</span>
           </h1>
-          <p className="mt-2 text-xs sm:text-base text-slate-600 leading-relaxed font-normal max-w-xl mx-auto font-malayalam">
+          <p className="mt-2 text-xs sm:text-base text-slate-100 leading-relaxed font-normal max-w-xl mx-auto font-malayalam">
             അടിയന്തര ഘട്ടങ്ങളിൽ ജീവൻ രക്ഷിക്കാൻ പള്ളിമുക്ക് ബ്രദേഴ്സ് മൈനാഗപ്പള്ളിയുടെ രക്തദാന സൂചിക. 
-            Find ready blood donors across Mynagappally, Kollam & Kerala.
+            A community-powered blood donor network connecting people in Mynagappally and beyond.
           </p>
 
           {/* Call to Actions on Mobile: touch-spring buttons */}
@@ -72,7 +72,7 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
             </button>
           </div>
 
-          <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-semibold">
+          <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-slate-200 font-semibold">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
             <span>Direct Call & WhatsApp contact with voluntary donors</span>
           </div>
@@ -98,7 +98,7 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
             <div className="text-xl sm:text-3xl font-black text-slate-900 font-['Outfit']">
               {totalCount}
             </div>
-            <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium">Verified in Sheet</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 font-medium">Registered in directory</p>
           </div>
 
           {/* Stat 2: Available Now (Highlighted) */}
@@ -119,7 +119,7 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
               <span>{availableCount}</span>
               <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <p className="text-[10px] sm:text-[11px] text-emerald-800 font-bold font-malayalam">നാട്ടിലുണ്ട് (Ready)</p>
+            <p className="text-[10px] sm:text-[11px] text-emerald-800 font-bold font-malayalam">Reported availability; confirm directly</p>
           </div>
 
           {/* Stat 3: Blood Groups */}
