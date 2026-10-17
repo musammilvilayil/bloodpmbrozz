@@ -4,8 +4,7 @@ import {
   Phone, 
   MapPin,
   Lock,
-  Instagram,
-  Facebook,
+  Camera,
   Globe
 } from 'lucide-react';
 
@@ -69,7 +68,7 @@ export default function Footer({ onOpenAdmin, onOpenRegister }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <a href="https://www.instagram.com/zenith.softworks/" target="_blank" rel="noopener noreferrer" aria-label="Zenith Softworks Instagram" className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-700/70 text-slate-200 hover:bg-pink-600 hover:text-white transition"><Instagram className="w-5 h-5" /></a>
+            <a href="https://www.instagram.com/zenith.softworks/" target="_blank" rel="noopener noreferrer" aria-label="Zenith Softworks Instagram" className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-700/70 text-slate-200 hover:bg-pink-600 hover:text-white transition"><Camera className="w-5 h-5" /></a>
             <a href="https://zenithsoftworks.in" target="_blank" rel="noopener noreferrer" aria-label="Zenith Softworks website" className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-700/70 text-slate-200 hover:bg-cyan-700 hover:text-white transition"><Globe className="w-5 h-5" /></a>
           </div>
         </div>
