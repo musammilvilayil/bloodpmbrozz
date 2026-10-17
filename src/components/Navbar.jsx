@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Heart, 
+  Droplet,
   Search, 
   UserPlus, 
   Shield, 
