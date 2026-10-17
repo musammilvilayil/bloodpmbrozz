@@ -8,7 +8,7 @@ import {
 // Server-side cache for high performance & avoiding Google Sheets rate-limiting
 let cachedDonors = null;
 let lastCacheTime = 0;
-const CACHE_TTL_MS = 60 * 1000; // 60 seconds
+const CACHE_TTL_MS = 10 * 1000; // 10 seconds for real-time dynamic syncing
 
 // In-memory admin overrides for quick approval & status adjustments
 // (In production, can also be synced directly with Google Apps Script)
@@ -20,27 +20,49 @@ export async function fetchLiveDonors(forceRefresh = false) {
     return cachedDonors;
   }
 
+  // 1. If Google Apps Script Web App URL is configured, use it for direct authorized Sheets API access
+  const appsScriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
+  if (appsScriptUrl) {
+    try {
+      const res = await fetch(`${appsScriptUrl}?action=public_donors`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.donors) && json.donors.length > 0) {
+          cachedDonors = json.donors;
+          lastCacheTime = now;
+          return json.donors;
+        }
+      }
+    } catch (e) {
+      console.warn("Apps Script Web App sync failed:", e.message);
+    }
+  }
+
+  // 2. Direct Google Sheet CSV export
   try {
     const res = await fetch(GOOGLE_SHEET_CSV_URL, {
       headers: {
-        'User-Agent': 'BloodPMBrozz-API/1.0',
-        'Accept': 'text/csv'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/csv,text/plain,*/*'
       }
     });
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch sheet CSV: ${res.status} ${res.statusText}`);
+    if (res.ok) {
+      const csvText = await res.text();
+      // Ensure response is actually CSV and not an HTML redirect/login page
+      if (csvText.includes('Timestamp') && csvText.includes('Full Name')) {
+        const rows = parseCSV(csvText);
+        const parsed = mapRowsToDonors(rows);
+        if (parsed.length > 0) {
+          cachedDonors = parsed;
+          lastCacheTime = now;
+          return parsed;
+        }
+      }
     }
-
-    const csvText = await res.text();
-    const rows = parseCSV(csvText);
-    const parsed = mapRowsToDonors(rows);
-
-    cachedDonors = parsed;
-    lastCacheTime = now;
-    return parsed;
+    throw new Error(`Google Sheet returned status ${res.status}`);
   } catch (err) {
-    console.error("Error fetching live Google Sheet:", err);
+    console.warn("Live Google Sheet sync status:", err.message);
     // If cached version exists, serve stale
     if (cachedDonors) return cachedDonors;
     // Otherwise fallback to initial seed record from user's live sheet
@@ -128,7 +150,7 @@ export default async function handler(req, res) {
 
     // Edge caching headers for Vercel
     if (res && res.setHeader) {
-      res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
+      res.setHeader('Cache-Control', 's-maxage=5, stale-while-revalidate=10');
       res.setHeader('Content-Type', 'application/json');
     }
 

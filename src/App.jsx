@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import DonorDirectory from './components/DonorDirectory';
@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import RegisterModal from './components/RegisterModal';
 import RemovalModal from './components/RemovalModal';
 import AdminPortal from './components/AdminPortal';
+import LiveToast from './components/LiveToast';
 
 export default function App() {
   const [donors, setDonors] = useState([]);
@@ -17,7 +18,14 @@ export default function App() {
     districts: {}
   });
   const [loading, setLoading] = useState(true);
-  const [lastSync, setLastSync] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState(new Date());
+  const [secondsAgo, setSecondsAgo] = useState(0);
+  const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
+  const [toast, setToast] = useState(null);
+
+  // Keep ref of donors to calculate dynamic diffs without stale closures
+  const prevDonorsRef = useRef([]);
 
   // Modals state
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -25,45 +33,94 @@ export default function App() {
   const [removalDonor, setRemovalDonor] = useState(null);
 
   // Fetch approved public donors from API with optional cache bypass
-  const fetchDonors = useCallback(async (force = false) => {
-    if (force) setLoading(true);
+  const fetchDonors = useCallback(async (force = false, silent = false) => {
+    if (!silent) setIsSyncing(true);
     try {
-      const url = force ? `/api/donors?refresh=true&t=${Date.now()}` : '/api/donors';
+      const url = force ? `/api/donors?refresh=true&t=${Date.now()}` : `/api/donors?t=${Date.now()}`;
       const res = await fetch(url);
       const data = await res.json();
-      if (data.success) {
-        setDonors(data.donors || []);
+      
+      if (data.success && Array.isArray(data.donors)) {
+        const newDonors = data.donors;
+        const prevDonors = prevDonorsRef.current;
+
+        // Detect dynamic updates if we previously had data
+        if (prevDonors.length > 0) {
+          // 1. Detect newly registered donors
+          const newlyAdded = newDonors.filter(nd => !prevDonors.some(pd => pd.id === nd.id));
+          if (newlyAdded.length > 0) {
+            const first = newlyAdded[0];
+            setToast({
+              type: 'new_donor',
+              badge: 'New Donor Added',
+              title: `${first.name} (${first.bloodGroup})`,
+              message: `Just added in ${first.district}! Ready for emergency assistance.`
+            });
+          } else {
+            // 2. Detect availability status changes
+            const changed = newDonors.find(nd => {
+              const old = prevDonors.find(pd => pd.id === nd.id);
+              return old && old.isAvailable !== nd.isAvailable;
+            });
+            if (changed) {
+              setToast({
+                type: 'status_change',
+                badge: 'Status Update',
+                title: `${changed.name} (${changed.bloodGroup})`,
+                message: `Availability updated to: ${changed.isAvailable ? 'Available Now in Kerala' : 'Resting / Unavailable'}`
+              });
+            }
+          }
+        }
+
+        prevDonorsRef.current = newDonors;
+        setDonors(newDonors);
+
         if (data.stats) {
           setStats(data.stats);
         }
-        setLastSync(data.lastSync || new Date().toISOString());
+        setLastSyncTime(new Date());
+        setSecondsAgo(0);
       }
     } catch (err) {
       console.error('Error fetching donors from API:', err);
     } finally {
       setLoading(false);
+      setIsSyncing(false);
     }
   }, []);
 
-  // Initial load, periodic background synchronization (every 60s), and on window focus
+  // Initial load
   useEffect(() => {
-    fetchDonors(false);
+    fetchDonors(false, false);
+  }, [fetchDonors]);
 
-    // Auto-sync polling every 60 seconds
-    const interval = setInterval(() => {
-      fetchDonors(false);
-    }, 60000);
+  // Dynamic live continuous polling every 15 seconds
+  useEffect(() => {
+    if (!autoSyncEnabled) return;
 
-    // Refresh when user returns to tab
+    const pollInterval = setInterval(() => {
+      fetchDonors(true, true); // silent background fetch, bypassing cache
+    }, 15000); // 15 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [fetchDonors, autoSyncEnabled]);
+
+  // Seconds counter ticker
+  useEffect(() => {
+    const ticker = setInterval(() => {
+      setSecondsAgo(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(ticker);
+  }, []);
+
+  // Auto-refresh when user tabs back into the window
+  useEffect(() => {
     const handleFocus = () => {
-      fetchDonors(false);
+      fetchDonors(true, true);
     };
     window.addEventListener('focus', handleFocus);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', handleFocus);
-    };
+    return () => window.removeEventListener('focus', handleFocus);
   }, [fetchDonors]);
 
   const handleScrollToSearch = () => {
@@ -80,6 +137,8 @@ export default function App() {
       <Navbar 
         onOpenAdmin={() => setIsAdminOpen(true)}
         onOpenRegister={() => setIsRegisterOpen(true)}
+        autoSyncEnabled={autoSyncEnabled}
+        secondsAgo={secondsAgo}
       />
 
       {/* 2. Hero Section */}
@@ -90,11 +149,15 @@ export default function App() {
           onScrollToSearch={handleScrollToSearch}
         />
 
-        {/* 3. Searchable Donor Directory */}
+        {/* 3. Searchable Donor Directory with Dynamic Live Sync Controls */}
         <DonorDirectory 
           donors={donors}
           loading={loading}
-          onRefresh={() => fetchDonors(true)}
+          isSyncing={isSyncing}
+          secondsAgo={secondsAgo}
+          autoSyncEnabled={autoSyncEnabled}
+          onToggleAutoSync={() => setAutoSyncEnabled(prev => !prev)}
+          onRefresh={() => fetchDonors(true, false)}
           onOpenRemoval={(donor) => setRemovalDonor(donor)}
           onOpenRegister={() => setIsRegisterOpen(true)}
         />
@@ -109,7 +172,13 @@ export default function App() {
         onOpenRegister={() => setIsRegisterOpen(true)}
       />
 
-      {/* 6. Modals */}
+      {/* 6. Dynamic Live Notification Toast */}
+      <LiveToast 
+        toast={toast} 
+        onDismiss={() => setToast(null)} 
+      />
+
+      {/* 7. Modals */}
       <RegisterModal 
         isOpen={isRegisterOpen} 
         onClose={() => setIsRegisterOpen(false)} 
@@ -124,7 +193,7 @@ export default function App() {
       <AdminPortal 
         isOpen={isAdminOpen} 
         onClose={() => setIsAdminOpen(false)} 
-        onRefreshPublicData={fetchDonors}
+        onRefreshPublicData={() => fetchDonors(true, false)}
       />
 
     </div>

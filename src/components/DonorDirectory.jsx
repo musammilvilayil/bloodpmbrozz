@@ -16,6 +16,10 @@ import { VALID_BLOOD_GROUPS, KERALA_DISTRICTS } from '../../api/utils';
 export default function DonorDirectory({ 
   donors = [], 
   loading = false, 
+  isSyncing = false,
+  secondsAgo = 0,
+  autoSyncEnabled = true,
+  onToggleAutoSync,
   onRefresh, 
   onOpenRemoval,
   onOpenRegister 
@@ -101,15 +105,36 @@ export default function DonorDirectory({
             </p>
           </div>
 
-          {/* Sync Button */}
-          <button
-            onClick={onRefresh}
-            disabled={loading}
-            className="self-start md:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold shadow-sm transition hover:border-red-300"
-          >
-            <RefreshCw className={`w-4 h-4 text-red-600 ${loading ? 'animate-spin' : ''}`} />
-            <span>Sync Live Records</span>
-          </button>
+          {/* Dynamic Real-time Sync Controls */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200/90 text-xs font-semibold text-slate-700 shadow-sm">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${autoSyncEnabled ? 'bg-emerald-400' : 'bg-slate-300'} opacity-75`}></span>
+                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${autoSyncEnabled ? 'bg-emerald-500' : 'bg-slate-400'}`}></span>
+              </span>
+              <span>
+                {autoSyncEnabled ? (
+                  <>Auto-Sync: <strong className="text-emerald-700">15s Live</strong></>
+                ) : (
+                  <>Auto-Sync: <strong className="text-slate-500">Paused</strong></>
+                )}
+              </span>
+              <span className="text-slate-300">•</span>
+              <span className="text-[11px] text-slate-500">
+                {secondsAgo === 0 ? "Synced just now" : `Synced ${secondsAgo}s ago`}
+              </span>
+            </div>
+
+            <button
+              onClick={onRefresh}
+              disabled={loading || isSyncing}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs sm:text-sm font-bold shadow-md shadow-red-600/20 transition transform hover:-translate-y-0.5 active:translate-y-0"
+              title="Force immediate refresh from Google Sheets"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>{isSyncing ? 'Syncing...' : 'Sync Now'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Filter Controls Box */}
@@ -292,9 +317,11 @@ export default function DonorDirectory({
             Showing <span className="font-bold text-slate-900">{filteredDonors.length}</span> of {donors.length} registered donors
           </p>
 
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Live Sync Active</span>
+            <span>Real-time Sync Active</span>
+            <span className="text-slate-300">•</span>
+            <span>Auto-refreshes every 15s</span>
           </div>
         </div>
 

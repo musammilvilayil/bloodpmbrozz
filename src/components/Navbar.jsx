@@ -10,7 +10,7 @@ import {
   Activity 
 } from 'lucide-react';
 
-export default function Navbar({ onOpenAdmin, onOpenRegister, activeSection }) {
+export default function Navbar({ onOpenAdmin, onOpenRegister, activeSection, autoSyncEnabled = true, secondsAgo = 0 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollTo = (id) => {
@@ -84,6 +84,14 @@ export default function Navbar({ onOpenAdmin, onOpenRegister, activeSection }) {
 
           {/* Action CTAs */}
           <div className="hidden lg:flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-semibold">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span>Live Sync Active</span>
+            </div>
+
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200/80 text-amber-800 text-xs font-semibold">
               <PhoneCall className="w-3.5 h-3.5 text-amber-600 animate-bounce" />
               <span>Helpline: 108 / 104</span>
