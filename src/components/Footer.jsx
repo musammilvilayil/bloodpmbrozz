@@ -57,6 +57,17 @@ export default function Footer({ onOpenAdmin, onOpenRegister }) {
 
         </div>
 
+        <div className="mt-5 rounded-2xl border border-slate-700/70 bg-slate-800/70 px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-600 to-blue-950 flex items-center justify-center font-black text-white text-xl shadow-lg shadow-blue-500/20" aria-hidden="true">Z</div>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.16em] text-slate-400 font-semibold">Designed & Developed by</p>
+              <a href="https://zenithsoftworks.in" target="_blank" rel="noopener noreferrer" className="font-extrabold text-white hover:text-cyan-300 transition-colors">ZENITH <span className="text-cyan-400">SOFTWORKS</span></a>
+            </div>
+          </div>
+          <span className="text-[11px] text-slate-400">Technology for community impact</span>
+        </div>
+
         {/* Bottom Copyright & Disclaimer */}
         <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 text-center sm:text-left">
           <p>© {new Date().getFullYear()} Pallimukk Brothers, Mynagappally. Free community blood index for Mynagappally Pallimukku, Kollam & Kerala.</p>
