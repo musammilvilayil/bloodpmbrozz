@@ -105,6 +105,62 @@ export function applyOverrides(donors) {
   });
 }
 
+
+/**
+ * Read-only display deduplication. Never modifies Google Sheet rows.
+ * Keep latest submission for each valid phone number; when a donor changes
+ * their blood group, require review rather than silently choosing a group.
+ * Explicit opt-outs across duplicate submissions remain restrictive.
+ */
+export function deduplicateDonors(donors) {
+  const groups = new Map();
+  const unkeyed = [];
+  const validPhone = (value) => {
+    const digits = String(value || '').replace(/\D/g, '');
+    const local = digits.startsWith('91') && digits.length === 12 ? digits.slice(2) : digits;
+    return /^[6-9]\d{9}$/.test(local) ? local : '';
+  };
+  const submissionTime = (donor) => {
+    const raw = String(donor.timestamp || '');
+    const match = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]), Number(match[4] || 0), Number(match[5] || 0), Number(match[6] || 0)).getTime();
+    const parsed = Date.parse(raw);
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  for (const donor of donors) {
+    const phone = validPhone(donor.mobileNumber);
+    if (!phone) {
+      unkeyed.push(donor);
+      continue;
+    }
+    if (!groups.has(phone)) groups.set(phone, []);
+    groups.get(phone).push(donor);
+  }
+  const merged = [];
+  for (const entries of groups.values()) {
+    if (entries.length === 1) {
+      merged.push(entries[0]);
+      continue;
+    }
+    const sorted = [...entries].sort((a, b) => submissionTime(b) - submissionTime(a) || (b.rowIndex || 0) - (a.rowIndex || 0));
+    const latest = sorted[0];
+    const bloodGroups = new Set(entries.map(d => d.bloodGroup).filter(Boolean));
+    // Conflicting blood groups must be reviewed; don't expose a potentially wrong group.
+    if (bloodGroups.size > 1) continue;
+    merged.push({
+      ...latest,
+      hasConsent: entries.every(d => d.hasConsent === true),
+      publicCallConsent: entries.every(d => d.publicCallConsent === true),
+      publicWhatsAppConsent: entries.every(d => d.publicWhatsAppConsent === true),
+      isAvailable: entries.every(d => d.isAvailable === true),
+      adminStatus: entries.some(d => ['REJECTED', 'DEACTIVATED'].includes(d.adminStatus))
+        ? 'DEACTIVATED'
+        : latest.adminStatus
+    });
+  }
+  return [...merged, ...unkeyed];
+}
+
 export function sanitizePublicDonors(donors) {
   return donors
     .filter(d => {
@@ -139,7 +195,7 @@ export default async function handler(req, res) {
     const forceRefresh = url.includes('refresh=true') || Boolean(req?.headers?.['x-refresh']);
     const rawDonors = await fetchLiveDonors(forceRefresh);
     const donorsWithOverrides = applyOverrides(rawDonors);
-    const publicDonors = sanitizePublicDonors(donorsWithOverrides);
+    const publicDonors = sanitizePublicDonors(deduplicateDonors(donorsWithOverrides));
 
     // Calculate live summary stats
     const stats = {
