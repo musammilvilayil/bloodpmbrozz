@@ -226,7 +226,7 @@ export default function AdminPortal({ isOpen, onClose, onRefreshPublicData }) {
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Pallimukk Brothers Blood Index Coordinator Control
+                Pallimukk Brothers, Mynagappally Blood Index Coordinator Control
               </p>
             </div>
           </div>

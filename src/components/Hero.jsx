@@ -31,7 +31,7 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
             </span>
-            <span className="truncate">പള്ളിമുക്ക് ബ്രദേഴ്സ് • Pallimukk Brothers</span>
+            <span className="truncate">പള്ളിമുക്ക് ബ്രദേഴ്സ്, മൈനാഗപ്പള്ളി • Mynagappally Pallimukku</span>
             <span className="text-emerald-300">•</span>
             <span className="text-emerald-700 font-semibold">100% Free</span>
           </div>
@@ -43,8 +43,8 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
             Blood Index <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700">Pallimukk Brothers</span>
           </h1>
           <p className="mt-2 sm:mt-3 text-xs sm:text-base text-slate-600 leading-relaxed font-normal max-w-xl mx-auto">
-            അടിയന്തര ഘട്ടങ്ങളിൽ ജീവൻ രക്ഷിക്കാൻ പള്ളിമുക്ക് ബ്രദേഴ്സിന്റെ രക്തദാന സൂചിക. 
-            Find ready blood donors across Pallimukku, Kollam & Kerala.
+            അടിയന്തര ഘട്ടങ്ങളിൽ ജീവൻ രക്ഷിക്കാൻ പള്ളിമുക്ക് ബ്രദേഴ്സ് മൈനാഗപ്പള്ളിയുടെ രക്തദാന സൂചിക. 
+            Find ready blood donors across Mynagappally, Kollam & Kerala.
           </p>
 
           {/* Call to Actions on Mobile: touch-friendly */}
@@ -126,9 +126,9 @@ export default function Hero({ stats, onOpenRegister, onScrollToSearch }) {
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Location</span>
             </div>
             <div className="text-xl sm:text-3xl font-black text-slate-900 font-['Outfit'] truncate">
-              Pallimukku
+              Mynagappally
             </div>
-            <p className="text-[10px] sm:text-[11px] text-slate-400">Kollam & Kerala</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400">Pallimukku, Kollam</p>
           </div>
 
         </div>

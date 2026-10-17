@@ -23,7 +23,7 @@ export default function Footer({ onOpenAdmin, onOpenRegister }) {
                 PALLIMUKK <span className="text-emerald-400">BROTHERS</span>
               </span>
               <p className="text-[11px] sm:text-xs text-slate-400">
-                Blood Index • പള്ളിമുക്ക് ബ്രദേഴ്സ് രക്തദാന കൂട്ടായ്മ
+                Blood Index • പള്ളിമുക്ക് ബ്രദേഴ്സ് മൈനാഗപ്പള്ളി
               </p>
             </div>
           </div>
@@ -59,10 +59,10 @@ export default function Footer({ onOpenAdmin, onOpenRegister }) {
 
         {/* Bottom Copyright & Disclaimer */}
         <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500 text-center sm:text-left">
-          <p>© {new Date().getFullYear()} Pallimukk Brothers. Free community blood index for Pallimukku, Kollam & Kerala.</p>
+          <p>© {new Date().getFullYear()} Pallimukk Brothers, Mynagappally. Free community blood index for Mynagappally Pallimukku, Kollam & Kerala.</p>
           <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
             <MapPin className="w-3 h-3 text-emerald-500 shrink-0" />
-            <span>Pallimukku, Kollam, Kerala</span>
+            <span>Mynagappally Pallimukku, Kollam, Kerala</span>
           </div>
         </div>
 

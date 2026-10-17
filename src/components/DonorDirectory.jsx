@@ -57,7 +57,7 @@ export default function DonorDirectory({
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 text-[11px] font-bold uppercase tracking-wider mb-1.5">
               <Droplet className="w-3.5 h-3.5 text-emerald-700" />
-              <span>Blood Group Filter • രക്തഗ്രൂപ്പ് തിരഞ്ഞെടുക്കുക</span>
+              <span>Blood Group Filter • മൈനാഗപ്പള്ളി പള്ളിമുക്ക്</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 font-['Outfit'] tracking-tight">
               Blood Donor Directory
@@ -164,7 +164,7 @@ export default function DonorDirectory({
 
           <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Pallimukk Brothers</span>
+            <span>Mynagappally Pallimukku</span>
           </div>
         </div>
 

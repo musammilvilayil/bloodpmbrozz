@@ -26,7 +26,7 @@ export default function DonorCard({ donor, onOpenRemoval }) {
   const getWhatsAppLink = (phone, bloodGroup, name) => {
     const cleanNumber = phone.replace(/[^\d]/g, '');
     const message = encodeURIComponent(
-      `Hello ${name || 'Donor'}, I found your contact on Pallimukk Brothers Blood Index regarding an urgent requirement for ${bloodGroup} blood. Could you please let me know if you are currently available to donate? Thank you!`
+      `Hello ${name || 'Donor'}, I found your contact on Pallimukk Brothers Mynagappally Blood Index regarding an urgent requirement for ${bloodGroup} blood. Could you please let me know if you are currently available to donate? Thank you!`
     );
     return `https://wa.me/${cleanNumber}?text=${message}`;
   };

@@ -20,7 +20,7 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
     if (requestType === 'delete') actionText = "permanently delete my donor listing";
 
     const msg = encodeURIComponent(
-      `Hello Pallimukk Brothers Admin, I am registered as a donor (ID: ${donor.id}, Name: ${donor.name}, Blood Group: ${donor.bloodGroup}). I would like to request to ${actionText}. Thank you.`
+      `Hello Pallimukk Brothers Mynagappally Admin, I am registered as a donor (ID: ${donor.id}, Name: ${donor.name}, Blood Group: ${donor.bloodGroup}). I would like to request to ${actionText}. Thank you.`
     );
     
     const waUrl = `https://wa.me/916282135504?text=${msg}`;
@@ -44,7 +44,7 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
                 Update or Remove Listing
               </h3>
               <p className="text-xs text-slate-400">
-                Pallimukk Brothers Blood Index
+                Pallimukk Brothers, Mynagappally Blood Index
               </p>
             </div>
           </div>
@@ -76,7 +76,7 @@ export default function RemovalModal({ isOpen, onClose, donor }) {
               <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
               <h4 className="font-bold text-slate-900 text-base">Request Submitted</h4>
               <p className="text-xs text-slate-600 max-w-xs mx-auto">
-                Your request has been routed to the Pallimukk Brothers coordinator for immediate update.
+                Your request has been routed to the Pallimukk Brothers, Mynagappally coordinator for immediate update.
               </p>
               <button
                 onClick={onClose}

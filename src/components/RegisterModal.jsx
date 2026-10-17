@@ -32,7 +32,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                 Register as Blood Donor
               </h3>
               <p className="text-xs text-emerald-100 font-medium">
-                Pallimukk Brothers (പള്ളിമുക്ക് ബ്രദേഴ്സ്)
+                Pallimukk Brothers (പള്ളിമുക്ക് ബ്രദേഴ്സ്, മൈനാഗപ്പള്ളി)
               </p>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                 <strong>Official Google Form:</strong> Submit your details using the official Google Form.
               </li>
               <li>
-                <strong>Instant Google Sheet Sync:</strong> Your response is automatically added to the Pallimukk Brothers spreadsheet.
+                <strong>Instant Google Sheet Sync:</strong> Your response is automatically added to the Pallimukk Brothers, Mynagappally spreadsheet.
               </li>
               <li>
                 <strong>Privacy & Explicit Consent:</strong> Your contact numbers are only displayed with your voluntary consent.

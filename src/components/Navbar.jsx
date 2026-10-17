@@ -47,9 +47,9 @@ export default function Navbar({ onOpenAdmin, onOpenRegister, autoSyncEnabled = 
                 </span>
               </div>
               <p className="text-[10px] sm:text-xs font-semibold text-slate-500 truncate flex items-center gap-1">
-                <span>പള്ളിമുക്ക് ബ്രദേഴ്സ്</span>
+                <span>മൈനാഗപ്പള്ളി പള്ളിമുക്ക്</span>
                 <span className="text-slate-300">•</span>
-                <span>Blood Registry</span>
+                <span>Mynagappally, Kollam</span>
               </p>
             </div>
           </div>
