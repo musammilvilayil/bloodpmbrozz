@@ -29,9 +29,6 @@ export default function DonorDirectory({
   onOpenRegister 
 }) {
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('ALL');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [availableOnly, setAvailableOnly] = useState(false);
-  const [selectedContacts, setSelectedContacts] = useState([]);
 
   // Filter donors strictly by selected blood group
   const filteredDonors = useMemo(() => {
@@ -40,8 +37,6 @@ export default function DonorDirectory({
       list = donors.filter(d => d.bloodGroup === selectedBloodGroup);
     }
 
-    if (searchTerm.trim()) list = list.filter(d => [d.name, d.district, d.currentResidence].some(v => String(v || '').toLowerCase().includes(searchTerm.trim().toLowerCase())));
-    if (availableOnly) list = list.filter(d => d.isAvailable);
     // Sort available donors first for emergency convenience
     return [...list].sort((a, b) => {
       if (a.isAvailable !== b.isAvailable) {
@@ -49,30 +44,8 @@ export default function DonorDirectory({
       }
       return (b.rowIndex || 0) - (a.rowIndex || 0);
     });
-  }, [donors, selectedBloodGroup, searchTerm, availableOnly]);
+  }, [donors, selectedBloodGroup]);
 
-
-  const consentedDonors = filteredDonors.filter(d => (d.allowCall && d.phone) || (d.allowWhatsApp && d.whatsapp));
-  const chosenDonors = consentedDonors.filter(d => selectedContacts.includes(String(d.id)));
-  const shareList = [
-    '🩸 *Pallimukk Brothers — Blood Donor Contacts*',
-    ...chosenDonors.map((d, i) => [
-      `${i + 1}. *${d.name}* (${d.bloodGroup})`,
-      `📍 ${d.district || 'Mynagappally'}`,
-      ...(d.allowCall && d.phone ? [`📞 ${d.phone}`] : []),
-      ...(d.allowWhatsApp && d.whatsapp ? [`💬 WhatsApp: ${d.whatsapp}`] : [])
-    ].join('\\n')),
-    'https://bloodpmbrozz.vercel.app'
-  ].join('\\n\\n');
-  const toggleContact = id => setSelectedContacts(current => current.includes(String(id)) ? current.filter(x => x !== String(id)) : [...current, String(id)]);
-  const shareContacts = () => {
-    if (!chosenDonors.length) return;
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareList)}`, '_blank', 'noopener,noreferrer');
-  };
-  const copyContacts = async () => {
-    if (!chosenDonors.length) return;
-    try { await navigator.clipboard.writeText(shareList); } catch { /* Clipboard permission denied */ }
-  };
 
   // Group counts for blood group pills
   const bloodGroupCounts = useMemo(() => {
@@ -94,11 +67,11 @@ export default function DonorDirectory({
   };
 
   return (
-    <section id="donors-section" className="py-6 sm:py-10 bg-slate-50 border-t border-emerald-100/60">
+    <section id="donors-section" className="py-3 sm:py-7 bg-slate-50 border-t border-emerald-100/60">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-3 sm:mb-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-[11px] font-black uppercase tracking-wider mb-1.5 border border-emerald-200">
               <Droplet className="w-3.5 h-3.5 text-emerald-700 animate-liquid-wave" />
@@ -139,8 +112,8 @@ export default function DonorDirectory({
         </div>
 
         {/* 1. Interactive Liquid Droplets Blood Group Selector */}
-        <div className="bg-white rounded-3xl p-3.5 sm:p-5 card-native border border-emerald-100/90 mb-4">
-          <div className="flex items-center justify-between mb-3 px-1">
+        <div className="bg-white rounded-2xl p-2.5 sm:p-4 card-native border border-emerald-100/90 mb-3">
+          <div className="flex items-center justify-between mb-2 px-1">
             <label className="text-xs sm:text-sm font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
               <Droplet className="w-4 h-4 text-emerald-600 fill-emerald-600" />
               <span>Select Blood Group (രക്തഗ്രൂപ്പ് തിരഞ്ഞെടുക്കുക):</span>
@@ -156,51 +129,29 @@ export default function DonorDirectory({
             )}
           </div>
 
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-2 flex items-center justify-between gap-2">
             <button type="button" onClick={() => handleSelectBloodGroup('ALL')} className={`rounded-xl px-4 py-2 text-xs font-bold ${selectedBloodGroup === 'ALL' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800'}`}>All donors ({donors.length})</button>
-            <span className="text-xs text-slate-500">Select a blood group to filter</span>
+            <span className="text-[10px] sm:text-xs text-slate-500">Tap a group to see names</span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2 sm:gap-3">
+          <div className="grid grid-cols-4 sm:grid-cols-4 xl:grid-cols-8 gap-1.5 sm:gap-3">
             {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => (
               <button type="button" key={bg} onClick={() => handleSelectBloodGroup(bg)} aria-pressed={selectedBloodGroup === bg}
-                className={`min-w-0 rounded-2xl border px-2 py-4 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 ${selectedBloodGroup === bg ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white border-slate-200 text-[#071A2E] hover:border-emerald-400'}`}>
-                <span className="block text-2xl sm:text-3xl font-black tracking-tight">{bg}</span>
-                <span className="block text-lg font-extrabold mt-1">{bloodGroupCounts[bg] || 0}</span>
-                <span className={`block text-[11px] ${selectedBloodGroup === bg ? 'text-emerald-50' : 'text-slate-500'}`}>Donors</span>
+                className={`min-w-0 rounded-xl border px-1 py-2 sm:py-3 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 ${selectedBloodGroup === bg ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white border-slate-200 text-[#071A2E] hover:border-emerald-400'}`}>
+                <span className="block text-lg sm:text-2xl font-black tracking-tight">{bg}</span>
+                <span className="block text-sm sm:text-lg font-extrabold mt-0.5">{bloodGroupCounts[bg] || 0}</span>
+                <span className={`block text-[9px] sm:text-[11px] ${selectedBloodGroup === bg ? 'text-emerald-50' : 'text-slate-500'}`}>Donors</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-emerald-100 shadow-sm mb-4">
-          <label htmlFor="donor-search" className="block text-sm font-extrabold text-slate-900 mb-2">Search donors by name or location</label>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true" />
-            <input id="donor-search" type="search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-              placeholder="Name, town or district" className="w-full h-12 pl-10 pr-4 rounded-2xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900" />
+        <div aria-live="polite" className="flex items-center justify-between gap-2 mb-3 rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2.5">
+          <div>
+            <h3 className="text-sm sm:text-lg font-extrabold text-[#071A2E]">{selectedBloodGroup === 'ALL' ? 'All Registered Donors' : `${selectedBloodGroup} Donors`}</h3>
+            <p className="text-xs text-emerald-800">{loading ? 'Loading donor names...' : `${filteredDonors.length} donor${filteredDonors.length === 1 ? '' : 's'} listed below`}</p>
           </div>
-          <label className="flex items-center gap-2 mt-3 text-sm font-semibold text-slate-700">
-            <input type="checkbox" checked={availableOnly} onChange={e => setAvailableOnly(e.target.checked)} className="w-4 h-4 accent-emerald-600" />
-            Available donors only
-          </label>
-          <p className="text-xs text-slate-500 mt-2">{filteredDonors.length} matching donors</p>
+          <span className="text-emerald-700 text-xl" aria-hidden="true">↓</span>
         </div>
-
-        <div className="rounded-3xl bg-emerald-950 text-white p-4 sm:p-5 mb-4">
-          <h3 className="font-extrabold flex items-center gap-2"><Share2 className="w-4 h-4" /> Share selected donors</h3>
-          <p className="text-xs text-emerald-100 mt-1">Select donor cards below to share their permitted contact details.</p>
-          <div className="flex items-center gap-2 mt-3">
-            <button type="button" onClick={() => setSelectedContacts(consentedDonors.map(d => String(d.id)))} className="px-3 py-2 rounded-xl bg-white/15 text-xs font-bold">Select all ({consentedDonors.length})</button>
-            <button type="button" onClick={() => setSelectedContacts([])} className="px-3 py-2 rounded-xl bg-white/10 text-xs font-bold">Clear</button>
-            <span className="ml-auto text-xs font-bold">{chosenDonors.length} selected</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2 mt-3">
-            <button type="button" disabled={!chosenDonors.length} onClick={shareContacts} className="h-11 rounded-xl bg-emerald-500 text-emerald-950 font-extrabold text-xs sm:text-sm disabled:opacity-40">WhatsApp Share</button>
-            <button type="button" disabled={!chosenDonors.length} onClick={copyContacts} className="h-11 rounded-xl bg-white/15 text-white font-bold text-xs sm:text-sm disabled:opacity-40 flex justify-center items-center gap-2"><Copy className="w-4 h-4" /> Copy List</button>
-          </div>
-        </div>
-        {/* 2. One-Tap Share to WhatsApp Status & Groups Component */}
-        <WhatsAppStatusShare selectedBloodGroup={selectedBloodGroup} />
 
         {/* Directory Results Counter Bar */}
         <div className="flex items-center justify-between mb-3.5 px-1">
@@ -212,7 +163,7 @@ export default function DonorDirectory({
             )}
           </p>
 
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-semibold">
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-500 font-semibold">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Mynagappally Pallimukku</span>
           </div>
