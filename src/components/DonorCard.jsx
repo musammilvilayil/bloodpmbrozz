@@ -4,7 +4,7 @@ import {
   MessageCircle, 
   MapPin, 
   CheckCircle2, 
-  Clock, 
+  Globe2, 
   Share2,
   Droplet 
 } from 'lucide-react';
@@ -113,8 +113,8 @@ export default function DonorCard({ donor, onOpenRemoval }) {
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold bg-amber-50 text-amber-800 border border-amber-200">
-              <Clock className="w-3 h-3 text-amber-600" />
-              <span className="font-malayalam">പുറത്താണ് (Outside Kerala)</span>
+              <Globe2 className="w-3 h-3 text-amber-600" />
+              <span className="font-malayalam">പ്രവാസി (Pravasi)</span>
             </span>
           )}
 
